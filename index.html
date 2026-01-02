@@ -1,113 +1,120 @@
-
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>Thanfh | Multi-disciplinary Designer</title>
-    <meta name="title" content="Thanfh | Multi-disciplinary Designer" />
-    <meta name="description" content="Crafting immersive digital experiences at the intersection of technology, art, and human emotion. Specializing in 3D, Branding, and Motion." />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta Tags -->
+  <title>Thanfh | Multi-disciplinary Designer</title>
+  <meta name="title" content="Thanfh | Multi-disciplinary Designer" />
+  <meta name="description"
+    content="Crafting immersive digital experiences at the intersection of technology, art, and human emotion. Specializing in 3D, Branding, and Motion." />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
 
 
-    <!-- Open Graph / Facebook / Zalo -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://your-portfolio-domain.com/" />
-    <meta property="og:title" content="Thanfh | Multi-disciplinary Designer" />
-    <meta property="og:description" content="Crafting immersive digital experiences at the intersection of technology, art, and human emotion." />
-    <meta property="og:image" content="/og-image.png" />
+  <!-- Open Graph / Facebook / Zalo -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://thanfh.pages.dev/" />
+  <meta property="og:title" content="Thanfh | Multi-disciplinary Designer" />
+  <meta property="og:description"
+    content="Crafting immersive digital experiences at the intersection of technology, art, and human emotion." />
+  <meta property="og:image" content="/og-image.png" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://your-portfolio-domain.com/" />
-    <meta property="twitter:title" content="Thanfh | Multi-disciplinary Designer" />
-    <meta property="twitter:description" content="Crafting immersive digital experiences at the intersection of technology, art, and human emotion." />
-    <meta property="twitter:image" content="/og-image.png" />
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://thanfh.pages.dev/" />
+  <meta property="twitter:title" content="Thanfh | Multi-disciplinary Designer" />
+  <meta property="twitter:description"
+    content="Crafting immersive digital experiences at the intersection of technology, art, and human emotion." />
+  <meta property="twitter:image" content="/og-image.png" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            screens: {
-              'xs': '480px',
-              '3xl': '1921px', // 2K+
-              '4xl': '2561px', // 4K+
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
-            },
-            colors: {
-              neutral: {
-                50: '#F0EEE9',
-                925: '#0f0f0f',
-              }
-            },
-            spacing: {
-              '128': '32rem',
-              '144': '36rem',
-            },
-            animation: {
-              shimmer: 'shimmer 2s infinite linear',
-            },
-            keyframes: {
-              shimmer: {
-                '0%': { transform: 'translateX(-100%)' },
-                '100%': { transform: 'translateX(100%)' }
-              }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          screens: {
+            'xs': '480px',
+            '3xl': '1921px', // 2K+
+            '4xl': '2561px', // 4K+
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            neutral: {
+              50: '#F0EEE9',
+              925: '#0f0f0f',
+            }
+          },
+          spacing: {
+            '128': '32rem',
+            '144': '36rem',
+          },
+          animation: {
+            shimmer: 'shimmer 2s infinite linear',
+          },
+          keyframes: {
+            shimmer: {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(100%)' }
             }
           }
         }
       }
-    </script>
-    <style>
-      /* Font Optimization for High-end Feel */
-      body {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeLegibility;
-      }
+    }
+  </script>
+  <style>
+    /* Font Optimization for High-end Feel */
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
 
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
-      }
-      .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-      }
-      
-      /* 
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* 
          Alternative Background: Technical Dot Grid 
          Replaces the previous noise texture with a clean, architectural grid.
       */
-      .bg-grid-pattern {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        pointer-events: none;
-        
-        /* CSS Dot Pattern */
-        background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
-        background-size: 40px 40px; /* Distance between dots */
-        
-        /* Subtle Opacity */
-        opacity: 0.07; 
-        
-        /* Optional: Fade out at the bottom for a seamless look */
-        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-      }
-    </style>
+    .bg-grid-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+
+      /* CSS Dot Pattern */
+      background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+      background-size: 40px 40px;
+      /* Distance between dots */
+
+      /* Subtle Opacity */
+      opacity: 0.07;
+
+      /* Optional: Fade out at the bottom for a seamless look */
+      -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -130,12 +137,15 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-200 antialiased selection:bg-emerald-500 selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300 overflow-x-hidden">
-    <!-- Updated Background Div using currentColor to adapt to theme -->
-    <div class="bg-grid-pattern text-neutral-900 dark:text-neutral-500"></div>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body
+  class="bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-200 antialiased selection:bg-emerald-500 selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300 overflow-x-hidden">
+  <!-- Updated Background Div using currentColor to adapt to theme -->
+  <div class="bg-grid-pattern text-neutral-900 dark:text-neutral-500"></div>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>
