@@ -13,7 +13,7 @@ const TransitionCurtain: React.FC<TransitionCurtainProps> = ({ label, isInitial 
   // LOGIC: Top-to-Bottom Wipe with Parallax Text
   // Curtain: -100% -> 0% -> 100% (Downwards)
   // Text: Parallax effect by moving slightly upwards relative to curtain during exit
-  
+
   return (
     <>
       <motion.div
@@ -29,14 +29,14 @@ const TransitionCurtain: React.FC<TransitionCurtainProps> = ({ label, isInitial 
             // ENTER: Text rises up slightly
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 0.2, duration: 0.8, ease: "easeOut" } }}
-            
+
             // EXIT: Parallax Effect
             // As curtain falls down (0 -> 100%), text moves UP relative to curtain (-30%)
             // This creates a visual drag where text moves slower than the black background
-            exit={{ 
-                opacity: 0, 
-                y: "-30vh", 
-                transition: { duration: 0.8, ease: "easeInOut" } 
+            exit={{
+              opacity: 0,
+              y: "-30vh",
+              transition: { duration: 0.8, ease: "easeInOut" }
             }}
           >
             <h1 className="text-white text-[12vw] md:text-[8vw] font-serif italic font-bold tracking-tighter leading-none select-none">
@@ -45,7 +45,7 @@ const TransitionCurtain: React.FC<TransitionCurtainProps> = ({ label, isInitial 
           </motion.div>
         )}
       </motion.div>
-      
+
       {/* Secondary Layer for Depth */}
       <motion.div
         className="fixed inset-0 z-[105] bg-neutral-900"

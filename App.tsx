@@ -1,6 +1,9 @@
 
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
+
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ProjectGrid from './components/ProjectGrid';
@@ -13,7 +16,6 @@ import CustomCursor from './components/CustomCursor';
 import GridDebugger from './components/GridDebugger';
 import TransitionCurtain from './components/TransitionCurtain';
 import { Project, GalleryCollection, PlaygroundSection, HomeContent } from './types';
-import { AnimatePresence } from 'framer-motion';
 import { getProjects, getGallery, getPlayground, getHomeContent } from './services/contentService';
 import { preloadAssets } from './services/assetLoader';
 import { PROFILE } from './constants';
@@ -29,7 +31,6 @@ const MainLayout = () => {
     const navigate = useNavigate();
 
     // --- TRANSITION STATE ---
-    // displayLocation tracks the page actually being rendered while the curtain is moving
     const [displayLocation, setDisplayLocation] = useState(location);
     const [showCurtain, setShowCurtain] = useState(true);
     const [transitionLabel, setTransitionLabel] = useState(profile.name);
@@ -51,7 +52,6 @@ const MainLayout = () => {
     const getLabelForPath = (pathname: string): string => {
         if (pathname === '/' || pathname === '/home') return homeContent?.profile?.name || profile.name;
         if (pathname.startsWith('/work')) {
-            // Check if specific project
             const parts = pathname.split('/');
             if (parts.length > 2) {
                 const projId = parts[2];
@@ -68,81 +68,22 @@ const MainLayout = () => {
 
     // --- ROUTING TRANSITION LOGIC ---
     useEffect(() => {
-        // If the location matches what we are displaying, do nothing
         if (location.pathname === displayLocation.pathname && location.search === displayLocation.search) return;
 
         const triggerTransition = async () => {
-            // 1. Set Label for the NEXT view
             setTransitionLabel(getLabelForPath(location.pathname));
             if (!isLoading) setIsInitialLoad(false);
-
-            // 2. Curtain Down
             setShowCurtain(true);
-
-            // 3. Wait for curtain to cover (1.1s)
             await new Promise(resolve => setTimeout(resolve, 1100));
-
-            // 4. Update the displayed page
             window.scrollTo({ top: 0, behavior: 'auto' });
             setDisplayLocation(location);
-
-            // 5. Curtain Up (handled by AnimatePresence + showCurtain state)
             setTimeout(() => {
                 setShowCurtain(false);
             }, 100);
         };
 
         triggerTransition();
-    }, [location, displayLocation, isLoading, projects, homeContent]); // Dependencies to ensure labels update if data loads late
-
-    // --- DYNAMIC HEAD META TAGS UPDATE ---
-    useEffect(() => {
-        if (homeContent) {
-            // Update Title
-            if (homeContent.siteTitle) {
-                document.title = homeContent.siteTitle;
-            }
-
-            // Update Favicon
-            if (homeContent.faviconUrl) {
-                const link: HTMLLinkElement | null = document.querySelector("link[rel*='icon']");
-                if (link) link.href = homeContent.faviconUrl;
-            }
-
-            // Update OG Image (Open Graph + Twitter)
-            if (homeContent.ogImageUrl) {
-                const ogImage = document.querySelector('meta[property="og:image"]');
-                if (ogImage) ogImage.setAttribute('content', homeContent.ogImageUrl);
-
-                const twitterImage = document.querySelector('meta[property="twitter:image"]');
-                if (twitterImage) twitterImage.setAttribute('content', homeContent.ogImageUrl);
-            }
-
-            // Update OG Title/Description based on profile
-            const ogTitle = document.querySelector('meta[property="og:title"]');
-            const twTitle = document.querySelector('meta[property="twitter:title"]');
-            if (homeContent.profile?.name) {
-                const title = `${homeContent.profile.name} | Portfolio`;
-                if (ogTitle) ogTitle.setAttribute('content', title);
-                if (twTitle) twTitle.setAttribute('content', title);
-            }
-
-            const ogDesc = document.querySelector('meta[property="og:description"]');
-            const twDesc = document.querySelector('meta[property="twitter:description"]');
-            if (homeContent.profile?.tagline) {
-                const desc = homeContent.profile.tagline;
-                if (ogDesc) ogDesc.setAttribute('content', desc);
-                if (twDesc) twDesc.setAttribute('content', desc);
-            }
-
-            // Update URL
-            const currentUrl = window.location.href;
-            const ogUrl = document.querySelector('meta[property="og:url"]');
-            const twUrl = document.querySelector('meta[property="twitter:url"]');
-            if (ogUrl) ogUrl.setAttribute('content', currentUrl);
-            if (twUrl) twUrl.setAttribute('content', currentUrl);
-        }
-    }, [homeContent, location]);
+    }, [location, displayLocation, isLoading, projects, homeContent]);
 
     // --- ASSET COLLECTION & INIT ---
     const getAllPublicAssets = (
@@ -180,9 +121,7 @@ const MainLayout = () => {
                 setPlayground(pg);
                 setHomeContent(h);
 
-                // Set initial label
                 setTransitionLabel(getLabelForPath(window.location.pathname));
-
                 setLoadingProgress(15);
 
                 if (window.location.pathname.startsWith('/admin')) {
@@ -239,19 +178,50 @@ const MainLayout = () => {
         }
     }, [isMusicPlaying, profile.musicUrl]);
 
+    // --- SEO / HELMET DATA PREP ---
     const safeUiText = homeContent?.uiText || {};
     const safeProfile = homeContent?.profile || profile;
     const isHiddenHeader = displayLocation.pathname.startsWith('/admin');
+    const currentUrl = window.location.href;
+
+    const toAbsoluteUrl = (url: string | undefined): string => {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        if (url.startsWith('/')) return `${window.location.origin}${url}`;
+        return url;
+    };
+
+    const safeTitle = homeContent?.siteTitle || "Portfolio";
+    const safeOgTitle = homeContent?.profile?.name ? `${homeContent.profile.name} | Portfolio` : safeTitle;
+    const safeOgDesc = homeContent?.profile?.tagline || homeContent?.profile?.bio?.slice(0, 150) || "Creative Portfolio";
+    const safeOgImage = toAbsoluteUrl(homeContent?.ogImageUrl);
+    const safeFavicon = toAbsoluteUrl(homeContent?.faviconUrl);
 
     return (
         <div className={`min-h-screen font-sans transition-opacity duration-1000 flex flex-col ${isLoading ? 'h-screen overflow-hidden' : 'opacity-100'}`}>
 
-            {/* GLOBAL LOADING SCREEN */}
+            <Helmet>
+                <title>{safeTitle}</title>
+                {safeFavicon && <link rel="icon" href={safeFavicon} />}
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={currentUrl} />
+                <meta property="og:title" content={safeOgTitle} />
+                <meta property="og:description" content={safeOgDesc} />
+                {safeOgImage && <meta property="og:image" content={safeOgImage} />}
+                {safeOgImage && <meta itemProp="image" content={safeOgImage} />}
+
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content={currentUrl} />
+                <meta property="twitter:title" content={safeOgTitle} />
+                <meta property="twitter:description" content={safeOgDesc} />
+                {safeOgImage && <meta property="twitter:image" content={safeOgImage} />}
+            </Helmet>
+
             <AnimatePresence>
                 {isLoading && <LoadingScreen progress={loadingProgress} />}
             </AnimatePresence>
 
-            {/* GLOBAL TRANSITION CURTAIN */}
             <AnimatePresence mode="wait">
                 {showCurtain && !isLoading && (
                     <TransitionCurtain key="global-curtain" label={transitionLabel} isInitial={isInitialLoad} />
@@ -271,68 +241,23 @@ const MainLayout = () => {
                     />
                 )}
 
-                {/* MAIN CONTENT AREA */}
                 <main className="w-full flex-grow relative z-10">
                     <Routes location={displayLocation}>
-                        <Route path="/" element={
-                            <Hero
-                                profile={safeProfile}
-                                uiText={safeUiText}
-                                heroConfig={homeContent?.heroConfig}
-                            />
-                        } />
-
-                        <Route path="/work" element={
-                            <ProjectGrid
-                                projects={projects}
-                                uiText={safeUiText}
-                            />
-                        } />
-
-                        <Route path="/work/:id" element={
-                            <CaseStudyView
-                                allProjects={projects}
-                                uiText={safeUiText}
-                            />
-                        } />
-
-                        <Route path="/gallery" element={
-                            <GalleryView
-                                collections={gallery}
-                            />
-                        } />
-
-                        <Route path="/playground" element={
-                            <PlaygroundView
-                                sections={playground}
-                            />
-                        } />
-
+                        <Route path="/" element={<Hero profile={safeProfile} uiText={safeUiText} heroConfig={homeContent?.heroConfig} />} />
+                        <Route path="/work" element={<ProjectGrid projects={projects} uiText={safeUiText} />} />
+                        <Route path="/work/:id" element={<CaseStudyView allProjects={projects} uiText={safeUiText} />} />
+                        <Route path="/gallery" element={<GalleryView collections={gallery} />} />
+                        <Route path="/playground" element={<PlaygroundView sections={playground} />} />
                         <Route path="/admin" element={
                             <Suspense fallback={<div className="min-h-screen bg-neutral-950 flex items-center justify-center text-white font-mono text-xs uppercase">Initializing CMS...</div>}>
                                 {isAuthenticated ? (
-                                    <AdminDashboard
-                                        onBack={() => navigate('/')}
-                                        onRefresh={() => window.location.reload()}
-                                        onLogout={() => auth.signOut()}
-                                    />
+                                    <AdminDashboard onBack={() => navigate('/')} onRefresh={() => window.location.reload()} onLogout={() => auth.signOut()} />
                                 ) : (
-                                    <AdminLogin
-                                        onSuccess={() => setIsAuthenticated(true)}
-                                        onCancel={() => navigate('/')}
-                                    />
+                                    <AdminLogin onSuccess={() => setIsAuthenticated(true)} onCancel={() => navigate('/')} />
                                 )}
                             </Suspense>
                         } />
-
-                        {/* Fallback to Home */}
-                        <Route path="*" element={
-                            <Hero
-                                profile={safeProfile}
-                                uiText={safeUiText}
-                                heroConfig={homeContent?.heroConfig}
-                            />
-                        } />
+                        <Route path="*" element={<Hero profile={safeProfile} uiText={safeUiText} heroConfig={homeContent?.heroConfig} />} />
                     </Routes>
                 </main>
 
