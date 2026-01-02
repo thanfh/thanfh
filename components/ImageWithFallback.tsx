@@ -10,12 +10,12 @@ interface ImageWithFallbackProps extends HTMLMotionProps<"img"> {
   containerClassName?: string; // Applied to the wrapper div
 }
 
-const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ 
-  src, 
-  alt, 
-  className = "", 
+const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
+  src,
+  alt,
+  className = "",
   containerClassName = "",
-  ...props 
+  ...props
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -25,15 +25,15 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   useEffect(() => {
     // If the image is already cached and complete, don't show loading state
     if (imgRef.current && imgRef.current.complete) {
-        setIsLoading(false);
+      setIsLoading(false);
     } else {
-        setIsLoading(true);
+      setIsLoading(true);
     }
     setHasError(false);
   }, [src]);
 
   const handleLoad = () => {
-      setIsLoading(false);
+    setIsLoading(false);
   };
 
   return (
@@ -46,33 +46,33 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
             transition={{ duration: 0.5 }}
             className="absolute inset-0 z-10 bg-neutral-200 dark:bg-neutral-800"
           >
-             {/* Shimmer Effect */}
-             <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent"></div>
+            {/* Shimmer Effect */}
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent"></div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {hasError && (
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-900 text-neutral-400">
-            <ImageOff className="w-8 h-8 mb-2 opacity-50" />
-            <span className="text-[10px] uppercase font-mono tracking-widest opacity-50">Failed to Load</span>
-         </div>
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-900 text-neutral-400">
+          <ImageOff className="w-8 h-8 mb-2 opacity-50" />
+          <span className="text-[10px] uppercase font-mono tracking-widest opacity-50">Failed to Load</span>
+        </div>
       )}
 
       {!hasError && (
-          <motion.img
-            ref={imgRef}
-            src={src}
-            alt={alt}
-            onLoad={handleLoad}
-            onError={() => {
-                setIsLoading(false);
-                setHasError(true);
-            }}
-            // Use CSS for opacity transition to avoid conflict with 'animate' prop (e.g. scale)
-            className={`block w-full h-full object-cover transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'} ${className}`}
-            {...props}
-          />
+        <motion.img
+          ref={imgRef}
+          src={src}
+          alt={alt}
+          onLoad={handleLoad}
+          onError={() => {
+            setIsLoading(false);
+            setHasError(true);
+          }}
+          // Use CSS for opacity transition to avoid conflict with 'animate' prop (e.g. scale)
+          className={`block w-full h-full object-cover transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'} ${className}`}
+          {...props}
+        />
       )}
     </div>
   );
