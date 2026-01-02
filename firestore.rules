@@ -1,0 +1,46 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is signed in
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Rules for the legacy 'portfolio' collection (Content: Home)
+    match /portfolio/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // New Root Collections for Scalability
+    match /projects/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /galleries/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /playground/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    
+    // Rules for the 'media_library' collection
+    match /media_library/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Default deny for other collections not explicitly listed
+    match /{document=**} {
+      allow read: if false;
+      allow write: if false;
+    }
+  }
+}
